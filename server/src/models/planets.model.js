@@ -1,4 +1,5 @@
-const parse = require("csv-parse");
+const path = require("path");
+const { parse } = require("csv-parse");
 const fs = require("fs");
 
 const habitablePlanets = [];
@@ -18,29 +19,33 @@ const parseOptions = {
   columns: true,
 };
 
-fs.createReadStream("kepler_data.csv")
-  .pipe(parse(parseOptions))
-  .on("data", (data) => {
-    const isHabitable = isHabitablePlanet(data);
+function loadPlanetsData() {
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(
+      path.join(__dirname, "..", "..", "data", "kepler_data.csv")
+    )
+      .pipe(parse(parseOptions))
+      .on("data", (data) => {
+        const isHabitable = isHabitablePlanet(data);
 
-    if (isHabitable) {
-      habitablePlanets.push(data);
-    }
-  })
-  .on("error", (err) => {
-    console.log(err);
-  })
-  .on("end", () => {
-    console.log(
-      habitablePlanets.map((planet) => {
-        return planet["kepler_name"];
+        if (isHabitable) {
+          habitablePlanets.push(data);
+        }
       })
-    );
-    const habitablePlanetsQuantity = habitablePlanets.length;
+      .on("error", (err) => {
+        console.log(err);
+        reject(err);
+      })
+      .on("end", () => {
+        const habitablePlanetsQuantity = habitablePlanets.length;
 
-    console.log(`${habitablePlanetsQuantity} habitable planets found!`);
+        console.log(`${habitablePlanetsQuantity} habitable planets found!`);
+        resolve();
+      });
   });
+}
 
 module.exports = {
+  loadPlanetsData,
   planets: habitablePlanets,
 };
