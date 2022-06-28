@@ -13,13 +13,13 @@ function isHabitablePlanet(planet) {
   return isHabitablePlanet;
 }
 
+const parseOptions = {
+  comment: "#",
+  columns: true,
+};
+
 fs.createReadStream("kepler_data.csv")
-  .pipe(
-    parse({
-      comment: "#",
-      columns: true,
-    })
-  )
+  .pipe(parse(parseOptions))
   .on("data", (data) => {
     const isHabitable = isHabitablePlanet(data);
 
