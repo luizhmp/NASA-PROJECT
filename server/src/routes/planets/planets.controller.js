@@ -1,7 +1,9 @@
 const { planets } = require("../../models/planets.model");
 
 function getAllPlanets(req, res) {
-  return res.status(200).json(planets);
+  const success = res.status(200);
+
+  return success.json(planets);
 }
 
 module.exports = {
