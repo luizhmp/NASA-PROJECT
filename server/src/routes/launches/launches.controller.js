@@ -9,12 +9,11 @@ function httpGetAllLaunches(req, res) {
 function httpAddNewLaunch(req, res) {
   const launch = req.body;
 
-  const { mission, rocket, destination } = launch;
+  const { mission, rocket, target } = launch;
 
-  const isAnyDataMissing =
-    !mission || !rocket || !launch.launchDate || !destination;
+  const isDataInvalid = !mission || !rocket || !launch.launchDate || !target;
 
-  if (isAnyDataMissing) {
+  if (isDataInvalid) {
     const responseFailure = res.status(400);
 
     return responseFailure.json({
@@ -24,9 +23,9 @@ function httpAddNewLaunch(req, res) {
 
   launch.launchDate = new Date(launch.launchDate);
 
-  const isLaunchDateValid = launch.launchDate.toString() === "Invalid Date";
+  const isLaunchDateInvalid = launch.launchDate.toString() === "Invalid Date";
 
-  if (isLaunchDateValid) {
+  if (isLaunchDateInvalid) {
     const responseFailure = res.status(400);
 
     return responseFailure.json({
