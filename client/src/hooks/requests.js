@@ -21,7 +21,7 @@ async function httpSubmitLaunch(launch) {
     return await fetch(`${API_URL}/launches`, {
       method: "post",
       headers: {
-        "Content-Type:": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(launch),
     });
